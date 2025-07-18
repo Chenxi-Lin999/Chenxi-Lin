@@ -1,6 +1,5 @@
 ---
 title: "Chenxi-Lin"
-image:"C:\Users\CLIN1\Documents\GitHub\Chenxi-Lin\Screenshot 2025-07-03 151125.png"
 toc: true
 about:
   template: trestles
