@@ -3,7 +3,7 @@
     "path": "~/GitHub/Chenxi-Lin/_quarto.yml",
     "project_path": "_quarto.yml",
     "type": "yaml",
-    "hash": "0",
+    "hash": "2376109833",
     "contents": "",
     "dirty": false,
     "created": 1752853879140.0,
@@ -11,14 +11,16 @@
     "relative_order": 1,
     "properties": {
         "source_window_id": "",
-        "Source": "Source"
+        "Source": "Source",
+        "cursorPosition": "11,0",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1752853634,
+    "lastKnownWriteTime": 1752856979,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1752853634,
+    "last_content_update": 1752856979503,
     "read_only": false,
     "read_only_alternatives": []
 }
