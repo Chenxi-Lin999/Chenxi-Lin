@@ -1,0 +1,22 @@
+---
+title: "Chenxi-Lin"
+image:"C:\Users\CLIN1\Documents\GitHub\Chenxi-Lin\Screenshot 2025-07-03 151125.png"
+toc: true
+about:
+  template: trestles
+  links:
+    - text: GitHub
+      href: link
+    - text: Email
+      href: link
+---
+
+::: {.column-page}
+
+## Bio
+
+## Research Goals
+
+## Experience
+
+:::
