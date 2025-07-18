@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://Chenxi-Lin999.github.io/Chenxi-Lin/index.html</loc>
-    <lastmod>2025-07-18T16:24:39.069Z</lastmod>
+    <loc>https://Chenxi-Lin999.github.io/Chenxi-Lin/projects.html</loc>
+    <lastmod>2025-07-18T16:44:53.537Z</lastmod>
   </url>
   <url>
-    <loc>https://Chenxi-Lin999.github.io/Chenxi-Lin/about.html</loc>
-    <lastmod>2025-07-18T16:24:39.069Z</lastmod>
+    <loc>https://Chenxi-Lin999.github.io/Chenxi-Lin/index.html</loc>
+    <lastmod>2025-07-18T16:44:53.537Z</lastmod>
+  </url>
+  <url>
+    <loc>https://Chenxi-Lin999.github.io/Chenxi-Lin/projects/project_title.html</loc>
+    <lastmod>2025-07-18T16:44:53.537Z</lastmod>
   </url>
 </urlset>
