@@ -4,9 +4,11 @@ toc: true
 about:
   template: trestles
   links:
-    - text: GitHub
+    - icon: github
+      text: GitHub
       href: link
-    - text: Email
+    - icon: mailbox-flag
+      text: Email
       href: link
 ---
 
