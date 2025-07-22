@@ -5,9 +5,11 @@ website:
   title: "Chenxi Lin"
   navbar:
     right:
-      - href: index.qmd
+      - icon: house-door
+        href: index.qmd
         text: Home
-      - href: projects.qmd
+      - icon: journal-bookmark
+        href: projects.qmd
         text: Projects
 
 format:
