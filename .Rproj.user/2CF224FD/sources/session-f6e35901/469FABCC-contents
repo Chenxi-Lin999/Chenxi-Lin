@@ -1,0 +1,23 @@
+---
+title: "Chenxi-Lin"
+toc: true
+about:
+  template: trestles
+  links:
+    - icon: github
+      text: GitHub
+      href: link
+    - icon: mailbox-flag
+      text: Email
+      href: link
+---
+
+::: {.column-page}
+
+## Bio
+
+## Research Goals
+
+## Experience
+
+:::
