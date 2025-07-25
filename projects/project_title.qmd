@@ -25,7 +25,6 @@ data <- read.csv("Parkinsons-Telemonitoring-ucirvine.csv")
 
 ## Summary statistics
 ```{r}
-
 summary(data)
 
 ```
@@ -50,7 +49,6 @@ ggplot(data, aes(x=factor(age), y=total_updrs)) +
 ```
 
 # 2. Correlation and Regression Analysis
-
 ```{r}
 
 # Correlation matrix
@@ -73,7 +71,6 @@ summary(multi_lm)
 
 
 # 3. Logistic Regression (Categorize UPDRS severity first)
-
 ```{r}
 
 # Categorize UPDRS severity (example: mild < 20, moderate = 20-30, severe > 30)

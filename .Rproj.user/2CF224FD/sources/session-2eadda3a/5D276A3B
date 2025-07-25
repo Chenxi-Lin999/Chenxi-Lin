@@ -3,7 +3,7 @@
     "path": "~/GitHub/Chenxi-Lin/projects/project_title.qmd",
     "project_path": "projects/project_title.qmd",
     "type": "quarto_markdown",
-    "hash": "2802347393",
+    "hash": "522865138",
     "contents": "",
     "dirty": false,
     "created": 1753203180461.0,
@@ -12,16 +12,16 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "59,0",
-        "scrollLine": "50",
+        "cursorPosition": "72,58",
+        "scrollLine": "78",
         "docOutlineVisible": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1753478147,
+    "lastKnownWriteTime": 1753478605,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1753478147325,
+    "last_content_update": 1753478605146,
     "read_only": false,
     "read_only_alternatives": []
 }

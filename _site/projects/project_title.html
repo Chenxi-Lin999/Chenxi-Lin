@@ -150,7 +150,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#load-the-packages" id="toc-load-the-packages" class="nav-link active" data-scroll-target="#load-the-packages">Load the packages</a></li>
-  <li><a href="#upload-the-dataset" id="toc-upload-the-dataset" class="nav-link" data-scroll-target="#upload-the-dataset">Upload the dataset</a></li>
+  <li><a href="#load-dataset" id="toc-load-dataset" class="nav-link" data-scroll-target="#load-dataset">load dataset</a></li>
+  <li><a href="#exploratory-data-analysis-eda" id="toc-exploratory-data-analysis-eda" class="nav-link" data-scroll-target="#exploratory-data-analysis-eda">1. Exploratory Data Analysis (EDA)</a>
+  <ul class="collapse">
+  <li><a href="#summary-statistics" id="toc-summary-statistics" class="nav-link" data-scroll-target="#summary-statistics">Summary statistics</a></li>
+  <li><a href="#visualize-distributions-of-total-updrs" id="toc-visualize-distributions-of-total-updrs" class="nav-link" data-scroll-target="#visualize-distributions-of-total-updrs">Visualize distributions of total UPDRS</a></li>
+  <li><a href="#boxplot-for-age-vs.-total-updrs" id="toc-boxplot-for-age-vs.-total-updrs" class="nav-link" data-scroll-target="#boxplot-for-age-vs.-total-updrs">Boxplot for age vs.&nbsp;total UPDRS</a></li>
+  </ul></li>
+  <li><a href="#correlation-and-regression-analysis" id="toc-correlation-and-regression-analysis" class="nav-link" data-scroll-target="#correlation-and-regression-analysis">2. Correlation and Regression Analysis</a></li>
+  <li><a href="#logistic-regression-categorize-updrs-severity-first" id="toc-logistic-regression-categorize-updrs-severity-first" class="nav-link" data-scroll-target="#logistic-regression-categorize-updrs-severity-first">3. Logistic Regression (Categorize UPDRS severity first)</a></li>
   </ul>
 </nav>
     </div>
@@ -262,8 +270,261 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="upload-the-dataset" class="level1">
-<h1>Upload the dataset</h1>
+<section id="load-dataset" class="level1">
+<h1>load dataset</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Parkinsons-Telemonitoring-ucirvine.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="exploratory-data-analysis-eda" class="level1">
+<h1>1. Exploratory Data Analysis (EDA)</h1>
+<section id="summary-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="summary-statistics">Summary statistics</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    subject           age           sex              test_time      
+ Min.   : 1.00   Min.   :36.0   Length:5875        Min.   : -4.263  
+ 1st Qu.:10.00   1st Qu.:58.0   Class :character   1st Qu.: 46.847  
+ Median :22.00   Median :65.0   Mode  :character   Median : 91.523  
+ Mean   :21.49   Mean   :64.8                      Mean   : 92.864  
+ 3rd Qu.:33.00   3rd Qu.:72.0                      3rd Qu.:138.445  
+ Max.   :42.00   Max.   :85.0                      Max.   :215.490  
+  motor_updrs      total_updrs        jitter           jitter_abs       
+ Min.   : 5.038   Min.   : 7.00   Min.   :0.000830   Min.   :2.250e-06  
+ 1st Qu.:15.000   1st Qu.:21.37   1st Qu.:0.003580   1st Qu.:2.244e-05  
+ Median :20.871   Median :27.58   Median :0.004900   Median :3.453e-05  
+ Mean   :21.296   Mean   :29.02   Mean   :0.006154   Mean   :4.403e-05  
+ 3rd Qu.:27.596   3rd Qu.:36.40   3rd Qu.:0.006800   3rd Qu.:5.333e-05  
+ Max.   :39.511   Max.   :54.99   Max.   :0.099990   Max.   :4.456e-04  
+   jitter_rap        jitter_ppq5         jitter_ddp          shimmer       
+ Min.   :0.000330   Min.   :0.000430   Min.   :0.000980   Min.   :0.00306  
+ 1st Qu.:0.001580   1st Qu.:0.001820   1st Qu.:0.004730   1st Qu.:0.01912  
+ Median :0.002250   Median :0.002490   Median :0.006750   Median :0.02751  
+ Mean   :0.002987   Mean   :0.003277   Mean   :0.008962   Mean   :0.03404  
+ 3rd Qu.:0.003290   3rd Qu.:0.003460   3rd Qu.:0.009870   3rd Qu.:0.03975  
+ Max.   :0.057540   Max.   :0.069560   Max.   :0.172630   Max.   :0.26863  
+   shimmer_db     shimmer_apq3      shimmer_apq5     shimmer_apq11    
+ Min.   :0.026   Min.   :0.00161   Min.   :0.00194   Min.   :0.00249  
+ 1st Qu.:0.175   1st Qu.:0.00928   1st Qu.:0.01079   1st Qu.:0.01566  
+ Median :0.253   Median :0.01370   Median :0.01594   Median :0.02271  
+ Mean   :0.311   Mean   :0.01716   Mean   :0.02014   Mean   :0.02748  
+ 3rd Qu.:0.365   3rd Qu.:0.02057   3rd Qu.:0.02375   3rd Qu.:0.03272  
+ Max.   :2.107   Max.   :0.16267   Max.   :0.16702   Max.   :0.27546  
+  shimmer_dda           nhr                hnr              rpde       
+ Min.   :0.00484   Min.   :0.000286   Min.   : 1.659   Min.   :0.1510  
+ 1st Qu.:0.02783   1st Qu.:0.010955   1st Qu.:19.406   1st Qu.:0.4698  
+ Median :0.04111   Median :0.018448   Median :21.920   Median :0.5423  
+ Mean   :0.05147   Mean   :0.032120   Mean   :21.679   Mean   :0.5415  
+ 3rd Qu.:0.06173   3rd Qu.:0.031463   3rd Qu.:24.444   3rd Qu.:0.6140  
+ Max.   :0.48802   Max.   :0.748260   Max.   :37.875   Max.   :0.9661  
+      dfa              ppe         
+ Min.   :0.5140   Min.   :0.02198  
+ 1st Qu.:0.5962   1st Qu.:0.15634  
+ Median :0.6436   Median :0.20550  
+ Mean   :0.6532   Mean   :0.21959  
+ 3rd Qu.:0.7113   3rd Qu.:0.26449  
+ Max.   :0.8656   Max.   :0.73173  </code></pre>
+</div>
+</div>
+</section>
+<section id="visualize-distributions-of-total-updrs" class="level2">
+<h2 class="anchored" data-anchor-id="visualize-distributions-of-total-updrs">Visualize distributions of total UPDRS</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x=</span>total_updrs)) <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth=</span><span class="dv">1</span>, <span class="at">fill=</span><span class="st">'skyblue'</span>, <span class="at">color=</span><span class="st">'black'</span>) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">'Distribution of Total UPDRS'</span>, <span class="at">x=</span><span class="st">'Total UPDRS'</span>, <span class="at">y=</span><span class="st">'Frequency'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="project_title_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="boxplot-for-age-vs.-total-updrs" class="level2">
+<h2 class="anchored" data-anchor-id="boxplot-for-age-vs.-total-updrs">Boxplot for age vs.&nbsp;total UPDRS</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x=</span><span class="fu">factor</span>(age), <span class="at">y=</span>total_updrs)) <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill=</span><span class="st">'lightgreen'</span>) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">'Age vs. Total UPDRS'</span>, <span class="at">x=</span><span class="st">'Age'</span>, <span class="at">y=</span><span class="st">'Total UPDRS'</span>) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">90</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="project_title_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="correlation-and-regression-analysis" class="level1">
+<h1>2. Correlation and Regression Analysis</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation matrix</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>cor_matrix <span class="ot">&lt;-</span> <span class="fu">cor</span>(data[, <span class="fu">c</span>(<span class="st">"age"</span>, <span class="st">"motor_updrs"</span>, <span class="st">"total_updrs"</span>, <span class="st">"jitter"</span>, <span class="st">"shimmer"</span>, <span class="st">"nhr"</span>, <span class="st">"hnr"</span>)])</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cor_matrix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     age motor_updrs total_updrs      jitter     shimmer
+age          1.000000000  0.27366476  0.31028993  0.02307118  0.10155386
+motor_updrs  0.273664760  1.00000000  0.94723131  0.08481576  0.10234870
+total_updrs  0.310289929  0.94723131  1.00000000  0.07424667  0.09214091
+jitter       0.023071181  0.08481576  0.07424667  1.00000000  0.70979112
+shimmer      0.101553856  0.10234870  0.09214091  0.70979112  1.00000000
+nhr          0.007092699  0.07496727  0.06095164  0.82529366  0.79515848
+hnr         -0.104842069 -0.15702858 -0.16211683 -0.67518824 -0.80141600
+                     nhr        hnr
+age          0.007092699 -0.1048421
+motor_updrs  0.074967270 -0.1570286
+total_updrs  0.060951644 -0.1621168
+jitter       0.825293655 -0.6751882
+shimmer      0.795158485 -0.8014160
+nhr          1.000000000 -0.6844119
+hnr         -0.684411857  1.0000000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize correlation matrix</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'corrplot' was built under R version 4.5.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>corrplot 0.95 loaded</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(cor_matrix, <span class="at">method=</span><span class="st">"color"</span>, <span class="at">type=</span><span class="st">"upper"</span>, <span class="at">tl.cex=</span><span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="project_title_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear Regression model: Predicting Total UPDRS using jitter and shimmer</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>lm_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_updrs <span class="sc">~</span> jitter <span class="sc">+</span> shimmer, <span class="at">data=</span>data)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = total_updrs ~ jitter + shimmer, data = data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-26.365  -7.332  -1.519   7.553  26.337 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  27.6897     0.2321 119.312  &lt; 2e-16 ***
+jitter       33.9171    35.0935   0.966    0.334    
+shimmer      32.9216     7.6397   4.309 1.66e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 10.66 on 5872 degrees of freedom
+Multiple R-squared:  0.008648,  Adjusted R-squared:  0.00831 
+F-statistic: 25.61 on 2 and 5872 DF,  p-value: 8.424e-12</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Multiple Linear Regression including age and sex</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>multi_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_updrs <span class="sc">~</span> jitter <span class="sc">+</span> shimmer <span class="sc">+</span> age <span class="sc">+</span> sex, <span class="at">data=</span>data)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(multi_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = total_updrs ~ jitter + shimmer + age + sex, data = data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-24.449  -7.660  -1.337   7.464  24.782 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  4.88057    0.99302   4.915 9.12e-07 ***
+jitter      94.01670   33.36093   2.818  0.00485 ** 
+shimmer     13.07136    7.30299   1.790  0.07353 .  
+age          0.36664    0.01508  24.319  &lt; 2e-16 ***
+sextrue     -2.03085    0.28395  -7.152 9.59e-13 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 10.1 on 5870 degrees of freedom
+Multiple R-squared:  0.1089,    Adjusted R-squared:  0.1083 
+F-statistic: 179.3 on 4 and 5870 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="logistic-regression-categorize-updrs-severity-first" class="level1">
+<h1>3. Logistic Regression (Categorize UPDRS severity first)</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Categorize UPDRS severity (example: mild &lt; 20, moderate = 20-30, severe &gt; 30)</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>severity <span class="ot">&lt;-</span> <span class="fu">cut</span>(data<span class="sc">$</span>total_updrs, <span class="at">breaks=</span><span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="cn">Inf</span>), <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Mild"</span>, <span class="st">"Moderate"</span>, <span class="st">"Severe"</span>))</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Logistic regression predicting severe vs non-severe</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>severe_binary <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(data<span class="sc">$</span>severity<span class="sc">==</span><span class="st">"Severe"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit logistic regression</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>logit_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(severe_binary <span class="sc">~</span> jitter <span class="sc">+</span> shimmer <span class="sc">+</span> age <span class="sc">+</span> sex, <span class="at">data=</span>data, <span class="at">family=</span><span class="fu">binomial</span>())</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(logit_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = severe_binary ~ jitter + shimmer + age + sex, family = binomial(), 
+    data = data)
+
+Coefficients:
+             Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) -2.324343   0.209643 -11.087  &lt; 2e-16 ***
+jitter      -0.772055   6.723934  -0.115    0.909    
+shimmer      6.773637   1.481060   4.574 4.80e-06 ***
+age          0.029939   0.003166   9.456  &lt; 2e-16 ***
+sextrue     -0.407588   0.058676  -6.946 3.75e-12 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 8033.3  on 5874  degrees of freedom
+Residual deviance: 7839.7  on 5870  degrees of freedom
+AIC: 7849.7
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ROC Curve analysis</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pROC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'pROC' was built under R version 4.5.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Type 'citation("pROC")' for a citation.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'pROC'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    cov, smooth, var</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>roc_obj <span class="ot">&lt;-</span> <span class="fu">roc</span>(data<span class="sc">$</span>severe_binary, <span class="fu">fitted</span>(logit_model))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Setting levels: control = 0, case = 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Setting direction: controls &lt; cases</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(roc_obj, <span class="at">col=</span><span class="st">"blue"</span>, <span class="at">main=</span><span class="st">"ROC Curve for Severe UPDRS Classification"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="project_title_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">auc</span>(roc_obj) <span class="co"># Area Under the Curve</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Area under the curve: 0.5892</code></pre>
+</div>
+</div>
 
 
 </section>
