@@ -33,7 +33,6 @@ jobs:
             any::psycModel 
             any::corrplot
             any::pROC
-            any::survival
             any::scales
             any::GGally
             
