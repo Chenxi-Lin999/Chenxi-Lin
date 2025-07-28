@@ -178,9 +178,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#multiple-regression-including-age-gender" id="toc-multiple-regression-including-age-gender" class="nav-link" data-scroll-target="#multiple-regression-including-age-gender">2.3 Multiple regression including age &amp; gender</a></li>
   </ul></li>
   <li><a href="#logistic-regression" id="toc-logistic-regression" class="nav-link" data-scroll-target="#logistic-regression">3. Logistic Regression</a></li>
-  <li><a href="#time-series-analysis-linear-mixed-models-lmm" id="toc-time-series-analysis-linear-mixed-models-lmm" class="nav-link" data-scroll-target="#time-series-analysis-linear-mixed-models-lmm">4. Time-Series Analysis / Linear Mixed Models (LMM)</a></li>
-  <li><a href="#cluster-analysis" id="toc-cluster-analysis" class="nav-link" data-scroll-target="#cluster-analysis">5. Cluster Analysis</a></li>
-  <li><a href="#principal-component-analysis-pca" id="toc-principal-component-analysis-pca" class="nav-link" data-scroll-target="#principal-component-analysis-pca">6. Principal Component Analysis (PCA)</a></li>
+  <li><a href="#cluster-analysis" id="toc-cluster-analysis" class="nav-link" data-scroll-target="#cluster-analysis">4. Cluster Analysis</a></li>
+  <li><a href="#principal-component-analysis-pca" id="toc-principal-component-analysis-pca" class="nav-link" data-scroll-target="#principal-component-analysis-pca">5. Principal Component Analysis (PCA)</a></li>
   </ul>
 </nav>
     </div>
@@ -633,73 +632,30 @@ Attaching package: 'pROC'</code></pre>
 </div>
 </div>
 </section>
-<section id="time-series-analysis-linear-mixed-models-lmm" class="level1">
-<h1>4. Time-Series Analysis / Linear Mixed Models (LMM)</h1>
+<section id="cluster-analysis" class="level1">
+<h1>4. Cluster Analysis</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary library</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: Matrix</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'Matrix'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:tidyr':
-
-    expand, pack, unpack</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit Linear Mixed Model (LMM) accounting for repeated measures per subject</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>lmm <span class="ot">&lt;-</span> <span class="fu">lmer</span>(total_updrs <span class="sc">~</span> test_time <span class="sc">+</span> age <span class="sc">+</span> gender <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> subject), <span class="at">data=</span>data)</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Linear mixed model fit by REML ['lmerMod']
-Formula: total_updrs ~ test_time + age + gender + (1 | subject)
-   Data: data
-
-REML criterion at convergence: 28154.1
-
-Scaled residuals: 
-    Min      1Q  Median      3Q     Max 
--4.1463 -0.4908  0.0156  0.5700  3.5208 
-
-Random effects:
- Groups   Name        Variance Std.Dev.
- subject  (Intercept) 101.105  10.055  
- Residual               6.679   2.584  
-Number of obs: 5875, groups:  subject, 42
-
-Fixed effects:
-              Estimate Std. Error t value
-(Intercept)  3.7803276 11.2054109   0.337
-test_time    0.0187618  0.0006388  29.371
-age          0.3687841  0.1703585   2.165
-genderMale  -2.1952752  3.2989902  -0.665
-
-Correlation of Fixed Effects:
-           (Intr) tst_tm age   
-test_time  -0.005              
-age        -0.985  0.000       
-genderMale -0.161  0.000  0.065</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check assumptions</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>diag_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">fitted =</span> <span class="fu">fitted</span>(lmm), <span class="at">resid  =</span> <span class="fu">resid</span>(lmm))</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diag_df, <span class="fu">aes</span>(<span class="at">x =</span> fitted, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>( <span class="at">shape  =</span> <span class="dv">21</span>,<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"skyblue"</span>, <span class="at">size   =</span> <span class="dv">3</span>,  <span class="at">stroke =</span> <span class="fl">0.5</span>, <span class="at">alpha  =</span> <span class="fl">0.2</span> ) <span class="sc">+</span></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method  =</span> <span class="st">"loess"</span>, <span class="at">se   =</span> <span class="cn">FALSE</span>,<span class="at">color   =</span> <span class="st">"darkred"</span>, <span class="at">linetype   =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype   =</span> <span class="st">"dotted"</span>, <span class="at">color  =</span> <span class="st">"gray40"</span>) <span class="sc">+</span></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>( <span class="at">title =</span> <span class="st">"LMM Diagnostics: Residuals vs Fitted"</span>, <span class="at">x =</span> <span class="st">"Fitted Values"</span>, <span class="at">y =</span> <span class="st">"Residuals"</span>) <span class="sc">+</span></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>(<span class="at">base_size =</span> <span class="dv">8</span>) <span class="sc">+</span></span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(),  </span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),  </span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>),</span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize features</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>data_scaled <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(jitter, shimmer, nhr, hnr) <span class="sc">%&gt;%</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(rescale)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co"># k-means clustering (k=3 example)</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>kmeans_model <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(data_scaled, <span class="at">centers=</span><span class="dv">3</span>, <span class="at">nstart=</span><span class="dv">25</span>)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Append clusters to original data</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>cluster <span class="ot">&lt;-</span> <span class="fu">factor</span>(kmeans_model<span class="sc">$</span>cluster)</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize clusters (using PCA for plotting)</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>pca_res <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(data_scaled, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>pca_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(pca_res<span class="sc">$</span>x, <span class="at">cluster=</span>data<span class="sc">$</span>cluster)</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pca_data, <span class="fu">aes</span>(PC1, PC2, <span class="at">color=</span>cluster)) <span class="sc">+</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha=</span><span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"K-means Clustering (k=3)"</span>, <span class="at">x=</span><span class="st">"PC1"</span>, <span class="at">y=</span><span class="st">"PC2"</span>) <span class="sc">+</span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -707,57 +663,16 @@ genderMale -0.161  0.000  0.065</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">resid</span>(lmm), <span class="at">breaks=</span><span class="dv">30</span>, <span class="at">col =</span> <span class="st">"plum"</span>, <span class="at">border  =</span> <span class="st">"black"</span>,<span class="at">main=</span><span class="st">"Residual Histogram"</span>, <span class="at">xlab=</span><span class="st">"Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="project_title_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="cluster-analysis" class="level1">
-<h1>5. Cluster Analysis</h1>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize features</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>data_scaled <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(jitter, shimmer, nhr, hnr) <span class="sc">%&gt;%</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(rescale)</span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="co"># k-means clustering (k=3 example)</span></span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>kmeans_model <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(data_scaled, <span class="at">centers=</span><span class="dv">3</span>, <span class="at">nstart=</span><span class="dv">25</span>)</span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Append clusters to original data</span></span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>cluster <span class="ot">&lt;-</span> <span class="fu">factor</span>(kmeans_model<span class="sc">$</span>cluster)</span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize clusters (using PCA for plotting)</span></span>
-<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>pca_res <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(data_scaled, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
-<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>pca_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(pca_res<span class="sc">$</span>x, <span class="at">cluster=</span>data<span class="sc">$</span>cluster)</span>
-<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pca_data, <span class="fu">aes</span>(PC1, PC2, <span class="at">color=</span>cluster)) <span class="sc">+</span></span>
-<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha=</span><span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"K-means Clustering (k=3)"</span>, <span class="at">x=</span><span class="st">"PC1"</span>, <span class="at">y=</span><span class="st">"PC2"</span>) <span class="sc">+</span></span>
-<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="project_title_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
 </div>
 </section>
 <section id="principal-component-analysis-pca" class="level1">
-<h1>6. Principal Component Analysis (PCA)</h1>
+<h1>5. Principal Component Analysis (PCA)</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA on selected numeric variables</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(data[, <span class="fu">c</span>(<span class="st">"jitter"</span>, <span class="st">"shimmer"</span>, <span class="st">"nhr"</span>, <span class="st">"hnr"</span>, <span class="st">"rpde"</span>, <span class="st">"dfa"</span>, <span class="st">"ppe"</span>)], <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of PCA</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pca)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA on selected numeric variables</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(data[, <span class="fu">c</span>(<span class="st">"jitter"</span>, <span class="st">"shimmer"</span>, <span class="st">"nhr"</span>, <span class="st">"hnr"</span>, <span class="st">"rpde"</span>, <span class="st">"dfa"</span>, <span class="st">"ppe"</span>)], <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of PCA</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pca)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Importance of components:
                          PC1    PC2     PC3     PC4     PC5     PC6     PC7
@@ -765,74 +680,74 @@ Standard deviation     2.082 1.0544 0.82576 0.59845 0.53083 0.36138 0.32092
 Proportion of Variance 0.619 0.1588 0.09741 0.05116 0.04025 0.01866 0.01471
 Cumulative Proportion  0.619 0.7778 0.87521 0.92638 0.96663 0.98529 1.00000</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Scree plot to visualize variance explained</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Scree plot to visualize variance explained</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  pca,</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">addlabels   =</span> <span class="cn">TRUE</span>,              <span class="co"># show percent values on bars</span></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim        =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">70</span>),          <span class="co"># y‐axis limits (adjust as needed)</span></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">barfill     =</span> <span class="st">"steelblue"</span>,       <span class="co"># fill color for bars</span></span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">barcolor    =</span> <span class="st">"black"</span>,           <span class="co"># border color</span></span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">linecolor   =</span> <span class="st">"firebrick"</span>,       <span class="co"># color of cumulative line</span></span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pointshape  =</span> <span class="dv">19</span>,                <span class="co"># shape of points on cumulative line</span></span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">pointsize   =</span> <span class="dv">3</span>,                 <span class="co"># size of those points</span></span>
-<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">labelsize   =</span> <span class="dv">8</span>                <span class="co"># size of the percent‐labels</span></span>
-<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Scree Plot"</span>,</span>
-<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Principal components ordered by descending variance"</span>,</span>
-<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">x     =</span> <span class="st">"Principal Component"</span>,</span>
-<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">y     =</span> <span class="st">"Percentage of Variance"</span></span>
-<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
-<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title  =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle  =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"gray0"</span>),</span>
-<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid  =</span> <span class="fu">element_blank</span>(), </span>
-<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x  =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>), </span>
-<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y  =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  pca,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">addlabels   =</span> <span class="cn">TRUE</span>,              <span class="co"># show percent values on bars</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim        =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">70</span>),          <span class="co"># y‐axis limits (adjust as needed)</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">barfill     =</span> <span class="st">"steelblue"</span>,       <span class="co"># fill color for bars</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">barcolor    =</span> <span class="st">"black"</span>,           <span class="co"># border color</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">linecolor   =</span> <span class="st">"firebrick"</span>,       <span class="co"># color of cumulative line</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pointshape  =</span> <span class="dv">19</span>,                <span class="co"># shape of points on cumulative line</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">pointsize   =</span> <span class="dv">3</span>,                 <span class="co"># size of those points</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">labelsize   =</span> <span class="dv">8</span>                <span class="co"># size of the percent‐labels</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Scree Plot"</span>,</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Principal components ordered by descending variance"</span>,</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">x     =</span> <span class="st">"Principal Component"</span>,</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">y     =</span> <span class="st">"Percentage of Variance"</span></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title  =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle  =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"gray0"</span>),</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid  =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x  =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>), </span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y  =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="project_title_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="project_title_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA biplot</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  pca,</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">label       =</span> <span class="st">"var"</span>,              <span class="co"># show only variable (arrow) labels</span></span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">repel       =</span> <span class="cn">TRUE</span>,               <span class="co"># avoid text overlap</span></span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">geom.ind    =</span> <span class="st">"point"</span>,            <span class="co"># draw points for observations</span></span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pointshape  =</span> <span class="dv">21</span>,</span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pointsize   =</span> <span class="fl">2.5</span>,</span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha.ind   =</span> <span class="fl">0.3</span>,    </span>
-<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">fill.ind    =</span> data<span class="sc">$</span>gender,        <span class="co"># use your gender factor</span></span>
-<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.ind     =</span> <span class="st">"black"</span>,            <span class="co"># point border</span></span>
-<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette     =</span> <span class="fu">c</span>(<span class="st">"salmon"</span>, <span class="st">"skyblue"</span>),</span>
-<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.var     =</span> <span class="st">"black"</span>,        <span class="co"># arrow color</span></span>
-<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.var.dim =</span> <span class="dv">1</span>,                  <span class="co"># arrow color by dimension?</span></span>
-<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">addEllipses =</span> <span class="cn">TRUE</span>,               <span class="co"># concentration ellipses by group</span></span>
-<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">ellipse.level=</span> <span class="fl">0.68</span>,              <span class="co"># 68% confidence ellipse</span></span>
-<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.title =</span> <span class="fu">list</span>(<span class="at">fill =</span> <span class="st">"Gender"</span>)</span>
-<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"PCA Biplot"</span>,</span>
-<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Observations colored by Gender; Variables as arrows"</span></span>
-<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
-<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title    =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"gray40"</span>),</span>
-<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"right"</span></span>
-<span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA biplot</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  pca,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">label       =</span> <span class="st">"var"</span>,              <span class="co"># show only variable (arrow) labels</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">repel       =</span> <span class="cn">TRUE</span>,               <span class="co"># avoid text overlap</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">geom.ind    =</span> <span class="st">"point"</span>,            <span class="co"># draw points for observations</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pointshape  =</span> <span class="dv">21</span>,</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pointsize   =</span> <span class="fl">2.5</span>,</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha.ind   =</span> <span class="fl">0.3</span>,    </span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">fill.ind    =</span> data<span class="sc">$</span>gender,        <span class="co"># use your gender factor</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.ind     =</span> <span class="st">"black"</span>,            <span class="co"># point border</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette     =</span> <span class="fu">c</span>(<span class="st">"salmon"</span>, <span class="st">"skyblue"</span>),</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.var     =</span> <span class="st">"black"</span>,        <span class="co"># arrow color</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.var.dim =</span> <span class="dv">1</span>,                  <span class="co"># arrow color by dimension?</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">addEllipses =</span> <span class="cn">TRUE</span>,               <span class="co"># concentration ellipses by group</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">ellipse.level=</span> <span class="fl">0.68</span>,              <span class="co"># 68% confidence ellipse</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.title =</span> <span class="fu">list</span>(<span class="at">fill =</span> <span class="st">"Gender"</span>)</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"PCA Biplot"</span>,</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Observations colored by Gender; Variables as arrows"</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title    =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"gray40"</span>),</span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"right"</span></span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="project_title_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="project_title_files/figure-html/unnamed-chunk-15-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

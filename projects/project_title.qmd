@@ -193,36 +193,7 @@ auc(roc_obj) # Area Under the Curve
 ```
 
 
-# 4. Time-Series Analysis / Linear Mixed Models (LMM)
-```{r}
-# Load necessary library
-library(lme4)
-
-# Fit Linear Mixed Model (LMM) accounting for repeated measures per subject
-lmm <- lmer(total_updrs ~ test_time + age + gender + (1 | subject), data=data)
-summary(lmm)
-
-# Check assumptions
-diag_df <- data.frame(fitted = fitted(lmm), resid  = resid(lmm))
-
-ggplot(diag_df, aes(x = fitted, y = resid)) +
-  geom_point( shape  = 21,color = "black", fill = "skyblue", size   = 3,  stroke = 0.5, alpha  = 0.2 ) +
-  geom_smooth(method  = "loess", se   = FALSE,color   = "darkred", linetype   = "dashed") +
-  geom_hline(yintercept = 0, linetype   = "dotted", color  = "gray40") +
-  labs( title = "LMM Diagnostics: Residuals vs Fitted", x = "Fitted Values", y = "Residuals") +
-  theme_classic(base_size = 8) +
-  theme(panel.grid.major = element_blank(),  
-    panel.grid.minor = element_blank(),  
-    plot.title = element_text(face = "bold", size = 16),
-    axis.title = element_text(size = 14),
-    axis.text = element_text(size = 12))
-
-hist(resid(lmm), breaks=30, col = "plum", border  = "black",main="Residual Histogram", xlab="Residuals")
-
-
-```
-
-# 5. Cluster Analysis
+# 4. Cluster Analysis
 ```{r}
 # Normalize features
 library(scales)
@@ -250,7 +221,7 @@ ggplot(pca_data, aes(PC1, PC2, color=cluster)) +
 
 ```
 
-# 6. Principal Component Analysis (PCA)
+# 5. Principal Component Analysis (PCA)
 ```{r}
 # PCA on selected numeric variables
 pca <- prcomp(data[, c("jitter", "shimmer", "nhr", "hnr", "rpde", "dfa", "ppe")], scale=TRUE)
