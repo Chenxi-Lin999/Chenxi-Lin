@@ -31,10 +31,8 @@ library(GGally)
 ```{r}
 data <- read.csv("Parkinsons-Telemonitoring-ucirvine.csv")
 
-# turn the character "false"/"true" into a factor with labels
-data <- data %>%
-  mutate(gender = factor(sex, levels = c("false", "true"), labels = c("Female", "Male") ))
-
+# Turn the character "false"/"true" into a factor with labels
+data <- data %>% mutate(gender = factor(sex, levels = c("false", "true"), labels = c("Female", "Male") ))
 
 ```
 
@@ -47,7 +45,7 @@ summary(data)
 
 ### 1.1.1 Summarize by group
 ```{r}
-# compute count, mean & SD of key variables by gender
+# Compute count, mean & SD of key variables by gender
 summary_by_gender <- data %>%
   group_by(gender) %>%
   summarise(
@@ -57,19 +55,18 @@ summary_by_gender <- data %>%
     total_updrs_mean   = mean(total_updrs,   na.rm = TRUE),  # avg total UPDRS
     total_updrs_sd     = sd(total_updrs,     na.rm = TRUE),  # SD total UPDRS
     motor_updrs_mean   = mean(motor_updrs,   na.rm = TRUE),  # avg motor UPDRS
-    motor_updrs_sd     = sd(motor_updrs,     na.rm = TRUE)   # SD motor UPDRS
-  )
+    motor_updrs_sd     = sd(motor_updrs,     na.rm = TRUE)   
+    )
 
 # Render the summary_by_gender as a markdown table
-summary_by_gender %>%
-  kable(caption = "Table 1. Summary Statistics of Age and UPDRS by Gender")
+summary_by_gender %>% kable(caption = "Table 1. Summary Statistics of Age and UPDRS by Gender")
 
 ```
 
 
 ## 1.2 Visualize distributions & outliers of total UPDRS
+### 1.2.1 Histogram of total UPDRS
 ```{r}
-#  Histogram of total UPDRS
 ggplot(data, aes(x = total_updrs)) +
   geom_histogram(binwidth = 1, fill = "darkslategray3", color = "black") +
   labs(title = "Distribution of Total UPDRS", x = "Total UPDRS", y = "Count") +
@@ -79,15 +76,21 @@ ggplot(data, aes(x = total_updrs)) +
         axis.text.y  = element_text(size = 12),  
         legend.position = "none")
 
-# Density plot of total UPDRS by gender
+```
+
+### 1.2.2 Density plot of total UPDRS by gender
+```{r}
 ggplot(data, aes(x = total_updrs, fill = gender)) +
   geom_density(alpha = 0.4) +
   labs(
     title = "Density of Total UPDRS by Gender",
     x     = "Total UPDRS",
     y     = "Density")
+```
 
-# Violin + boxplot of motor UPDRS by gender
+
+### 1.2.3 Violin & boxplot of motor UPDRS by gender
+```{r}
 ggplot(data, aes(x = gender, y = motor_updrs, fill = gender)) +
   geom_violin(trim = FALSE, color = "black") +
   geom_boxplot(width = 0.1, outlier.shape = NA,
@@ -101,7 +104,6 @@ ggplot(data, aes(x = gender, y = motor_updrs, fill = gender)) +
         axis.text.x  = element_text(size = 12),     
         axis.text.y  = element_text(size = 12),  
         legend.position = "none")
-
 ```
 
 
@@ -120,33 +122,56 @@ data %>%
   select(motor_updrs, total_updrs, jitter, shimmer, nhr, hnr) %>%
   ggpairs(title = "Pairwise Scatterplots of Vocal Measures")
 
+```
+
+
+# 2. Correlation and Regression Analysis
+## 2.1 Correlation matrix
+```{r}
+num_vars <- data %>%
+  select(age, motor_updrs, total_updrs, jitter, shimmer, nhr, hnr)
+corr_mat <- cor(num_vars, use = "pairwise.complete.obs")
+
+library(ggcorrplot)
+
+ggcorrplot(
+  corr_mat,
+  hc.order   = TRUE,      # cluster vars
+  type       = "lower",   # lower triangle
+  lab        = TRUE,      # show values
+  lab_size   = 3,         
+  tl.cex     = 12,        # axis‐label size
+  tl.srt     = 45,        # rotate labels
+  tl.col     = "black",   # label colour
+  outline.col= "gray70",  
+  colors      = c("red", "white", "steelblue"),
+  ggtheme    = theme_minimal(base_size = 14)) +
+  labs(title    = "Correlogram") +
+  theme(axis.text = element_text(color = "black"))
+
 
 ```
 
 
-
-# 2. Correlation and Regression Analysis
+## 2.2 Simple linear regression
 ```{r}
 
-# 3.1 Correlation matrix
-num_vars <- data %>%
-  select(age, motor_updrs, total_updrs, jitter, shimmer, nhr, hnr)
-corr_mat <- cor(num_vars, use = "pairwise.complete.obs")
-corrplot(corr_mat, method = "color", type = "upper", order = "hclust",
-         tl.cex = 0.8, addCoef.col = "black", number.cex = 0.7)
-
-# 3.2 Simple linear regression
 lm1 <- lm(total_updrs ~ jitter + shimmer, data = data)
 summary(lm1)
+```
 
-# 3.3 Multiple regression including age & gender
+
+## 2.3 Multiple regression including age & gender
+```{r}
+
 lm2 <- lm(total_updrs ~ jitter + shimmer + age + gender, data = data)
 summary(lm2)
 
 ```
 
 
-# 3. Logistic Regression (Categorize UPDRS severity first)
+
+# 3. Logistic Regression
 ```{r}
 # Categorize UPDRS severity (example: mild < 20, moderate = 20-30, severe > 30)
 data$severity <- cut(data$total_updrs, breaks=c(-Inf, 20, 30, Inf), labels=c("Mild", "Moderate", "Severe"))
@@ -161,14 +186,14 @@ summary(logit_model)
 # ROC Curve analysis
 library(pROC)
 roc_obj <- roc(data$severe_binary, fitted(logit_model))
-plot(roc_obj, col="blue", main="ROC Curve for Severe UPDRS Classification")
+plot(roc_obj, col="darkslategray3", main="ROC Curve for Severe UPDRS Classification")
 auc(roc_obj) # Area Under the Curve
 
 
 ```
 
 
-# 4.Time-Series Analysis / Linear Mixed Models (LMM)
+# 4. Time-Series Analysis / Linear Mixed Models (LMM)
 ```{r}
 # Load necessary library
 library(lme4)
@@ -178,12 +203,26 @@ lmm <- lmer(total_updrs ~ test_time + age + gender + (1 | subject), data=data)
 summary(lmm)
 
 # Check assumptions
-plot(resid(lmm) ~ fitted(lmm))
-hist(resid(lmm), breaks=30, main="Residual Histogram", xlab="Residuals")
+diag_df <- data.frame(fitted = fitted(lmm), resid  = resid(lmm))
+
+ggplot(diag_df, aes(x = fitted, y = resid)) +
+  geom_point( shape  = 21,color = "black", fill = "skyblue", size   = 3,  stroke = 0.5, alpha  = 0.2 ) +
+  geom_smooth(method  = "loess", se   = FALSE,color   = "darkred", linetype   = "dashed") +
+  geom_hline(yintercept = 0, linetype   = "dotted", color  = "gray40") +
+  labs( title = "LMM Diagnostics: Residuals vs Fitted", x = "Fitted Values", y = "Residuals") +
+  theme_classic(base_size = 8) +
+  theme(panel.grid.major = element_blank(),  
+    panel.grid.minor = element_blank(),  
+    plot.title = element_text(face = "bold", size = 16),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12))
+
+hist(resid(lmm), breaks=30, col = "plum", border  = "black",main="Residual Histogram", xlab="Residuals")
+
 
 ```
 
-# 5. Cluster Analysis (Unsupervised Learning)
+# 5. Cluster Analysis
 ```{r}
 # Normalize features
 library(scales)
@@ -211,7 +250,7 @@ ggplot(pca_data, aes(PC1, PC2, color=cluster)) +
 
 ```
 
-# Principal Component Analysis (PCA)
+# 6. Principal Component Analysis (PCA)
 ```{r}
 # PCA on selected numeric variables
 pca <- prcomp(data[, c("jitter", "shimmer", "nhr", "hnr", "rpde", "dfa", "ppe")], scale=TRUE)
@@ -220,50 +259,63 @@ pca <- prcomp(data[, c("jitter", "shimmer", "nhr", "hnr", "rpde", "dfa", "ppe")]
 summary(pca)
 
 # Scree plot to visualize variance explained
-screeplot(pca, type="lines", main="Scree Plot")
+library(factoextra)
+
+fviz_eig(
+  pca,
+  addlabels   = TRUE,              # show percent values on bars
+  ylim        = c(0, 70),          # y‐axis limits (adjust as needed)
+  barfill     = "steelblue",       # fill color for bars
+  barcolor    = "black",           # border color
+  linecolor   = "firebrick",       # color of cumulative line
+  pointshape  = 19,                # shape of points on cumulative line
+  pointsize   = 3,                 # size of those points
+  labelsize   = 8                # size of the percent‐labels
+) +
+  labs(
+    title = "Scree Plot",
+    subtitle = "Principal components ordered by descending variance",
+    x     = "Principal Component",
+    y     = "Percentage of Variance"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title  = element_text(face = "bold"),
+    plot.subtitle  = element_text(color = "gray0"),
+    panel.grid  = element_blank(), 
+    axis.text.x  = element_text(size = 12), 
+    axis.text.y  = element_text(size = 12) )
 
 # PCA biplot
-biplot(pca, scale=0, cex=0.5)
-
+fviz_pca_biplot(
+  pca,
+  label       = "var",              # show only variable (arrow) labels
+  repel       = TRUE,               # avoid text overlap
+  geom.ind    = "point",            # draw points for observations
+  pointshape  = 21,
+  pointsize   = 2.5,
+  alpha.ind   = 0.3,    
+  fill.ind    = data$gender,        # use your gender factor
+  col.ind     = "black",            # point border
+  palette     = c("salmon", "skyblue"),
+  col.var     = "black",        # arrow color
+  col.var.dim = 1,                  # arrow color by dimension?
+  addEllipses = TRUE,               # concentration ellipses by group
+  ellipse.level= 0.68,              # 68% confidence ellipse
+  legend.title = list(fill = "Gender")
+) +
+  labs(
+    title = "PCA Biplot",
+    subtitle = "Observations colored by Gender; Variables as arrows"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title    = element_text(face = "bold"),
+    plot.subtitle = element_text(color = "gray40"),
+    legend.position = "right"
+  )
 
 ```
-
-
-# 7. Survival Analysis (Optional - adapted example)
-```{r}
-
-# Load necessary library
-library(survival)
-
-# Example binary event: UPDRS exceeding threshold (e.g., > 30)
-data$event <- ifelse(data$total_updrs > 30, 1, 0)
-
-# Survival object (assuming test_time as follow-up duration)
-surv_obj <- Surv(data$test_time, data$event)
-
-# Kaplan-Meier curve
-km_fit <- survfit(surv_obj ~ 1)
-plot(km_fit, main="Kaplan-Meier Curve", xlab="Time", ylab="Survival Probability")
-
-# Cox Proportional Hazards Model (example with age, sex)
-cox_model <- coxph(surv_obj ~ age + sex, data=data)
-summary(cox_model)
-
-
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -31,10 +31,12 @@ jobs:
             any::lme4
             any::lmerTest
             any::psycModel 
-            any::corrplot
+            any::ggcorrplot
             any::pROC
             any::scales
             any::GGally
+            any::factoextra
+            any::RColorBrewer
             
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
